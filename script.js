@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupClickHearts();
   setupScrollTop();
   setupEasterEgg();
-  autoPlayMusic();
+  // Music starts only after countdown ends (see initMidnightCountdown)
 });
 
 /* ══════════════════════════════════════════════════════════════
@@ -112,6 +112,7 @@ function initMidnightCountdown() {
     landing.style.display = '';
     initParticles();
     createBalloons();
+    autoPlayMusic();
     return;
   }
 
@@ -167,6 +168,7 @@ function onMidnightReached() {
     landing.style.display = '';
     initParticles();
     createBalloons();
+    autoPlayMusic();
   }, 1000);
 }
 

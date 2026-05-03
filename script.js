@@ -40,9 +40,9 @@ const captions = [
 // ✏️ Number of candles on the cake
 const CANDLE_COUNT = 5;
 
-// ✏️ COUNTDOWN TARGET: Set the birthday date/time (midnight, local time)
-// Format: year, month (0-indexed!), day, hour, minute
-const BIRTHDAY_TARGET = new Date(2026, 4, 4, 0, 0, 0); // May 4, 2026 00:00:00
+// ✏️ COUNTDOWN TARGET: Midnight in GREEK time (EEST = UTC+3)
+// May 4, 2026 00:00:00 Greece = May 3, 2026 21:00:00 UTC
+const BIRTHDAY_TARGET = new Date(Date.UTC(2026, 4, 3, 21, 0, 0));
 
 /* ══════════════════════════════════════════════════════════════
    STATE

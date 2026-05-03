@@ -62,7 +62,41 @@ document.addEventListener('DOMContentLoaded', () => {
   setupClickHearts();
   setupScrollTop();
   setupEasterEgg();
+  autoPlayMusic();
 });
+
+/* ══════════════════════════════════════════════════════════════
+   AUTO-PLAY MUSIC
+   Browsers block autoplay, so we try immediately and also
+   set a fallback that plays on the user's first interaction.
+   ══════════════════════════════════════════════════════════════ */
+function autoPlayMusic() {
+  const audio = document.getElementById('bg-music');
+  const btn = document.getElementById('music-toggle');
+  if (!audio) return;
+
+  function startMusic() {
+    audio.play().then(() => {
+      musicPlaying = true;
+      if (btn) {
+        btn.classList.add('playing');
+        btn.querySelector('.music-icon').textContent = '🔊';
+      }
+    }).catch(() => { /* blocked — will retry on interaction */ });
+  }
+
+  // Try autoplay immediately
+  startMusic();
+
+  // Fallback: play on first user tap/click if autoplay was blocked
+  function onFirstInteraction() {
+    if (!musicPlaying) startMusic();
+    document.removeEventListener('click', onFirstInteraction);
+    document.removeEventListener('touchstart', onFirstInteraction);
+  }
+  document.addEventListener('click', onFirstInteraction, { once: false });
+  document.addEventListener('touchstart', onFirstInteraction, { once: false });
+}
 
 /* ══════════════════════════════════════════════════════════════
    MIDNIGHT COUNTDOWN

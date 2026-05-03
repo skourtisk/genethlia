@@ -40,6 +40,10 @@ const captions = [
 // ✏️ Number of candles on the cake
 const CANDLE_COUNT = 5;
 
+// ✏️ COUNTDOWN TARGET: Set the birthday date/time (midnight, local time)
+// Format: year, month (0-indexed!), day, hour, minute
+const BIRTHDAY_TARGET = new Date(2026, 4, 4, 0, 0, 0); // May 4, 2026 00:00:00
+
 /* ══════════════════════════════════════════════════════════════
    STATE
    ══════════════════════════════════════════════════════════════ */
@@ -47,18 +51,130 @@ let currentLightbox = 0;
 let musicPlaying = false;
 let candlesBlown = 0;
 let easterEggClicks = 0;
+let midnightInterval = null;
 
 /* ══════════════════════════════════════════════════════════════
    INITIALIZATION
    ══════════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
-  initParticles();
-  createBalloons();
+  initMidnightCountdown();
   buildCandles();
   setupClickHearts();
   setupScrollTop();
   setupEasterEgg();
 });
+
+/* ══════════════════════════════════════════════════════════════
+   MIDNIGHT COUNTDOWN
+   ══════════════════════════════════════════════════════════════ */
+function initMidnightCountdown() {
+  const overlay = document.getElementById('midnight-countdown');
+  const landing = document.getElementById('landing');
+  const now = new Date();
+
+  // If birthday has already arrived, skip countdown entirely
+  if (now >= BIRTHDAY_TARGET) {
+    overlay.classList.add('hidden');
+    landing.style.display = '';
+    initParticles();
+    createBalloons();
+    return;
+  }
+
+  // Hide landing while countdown is active
+  landing.style.display = 'none';
+
+  // Init countdown particles
+  initCountdownParticles();
+
+  // Start ticking
+  updateMidnightTimer();
+  midnightInterval = setInterval(updateMidnightTimer, 1000);
+}
+
+function updateMidnightTimer() {
+  const now = new Date();
+  const diff = BIRTHDAY_TARGET - now;
+
+  if (diff <= 0) {
+    clearInterval(midnightInterval);
+    onMidnightReached();
+    return;
+  }
+
+  const hours = Math.floor(diff / 3600000);
+  const minutes = Math.floor((diff % 3600000) / 60000);
+  const seconds = Math.floor((diff % 60000) / 1000);
+
+  document.getElementById('cd-hours').textContent = String(hours).padStart(2, '0');
+  document.getElementById('cd-minutes').textContent = String(minutes).padStart(2, '0');
+  document.getElementById('cd-seconds').textContent = String(seconds).padStart(2, '0');
+}
+
+function onMidnightReached() {
+  // 🎉 Big confetti explosion at midnight!
+  if (typeof confetti === 'function') {
+    const end = Date.now() + 4000;
+    (function frame() {
+      confetti({ particleCount: 6, angle: 60, spread: 55, origin: { x: 0 }, colors: ['#e8a4c8','#a78bfa','#f9c74f','#ff6b6b'] });
+      confetti({ particleCount: 6, angle: 120, spread: 55, origin: { x: 1 }, colors: ['#e8a4c8','#a78bfa','#f9c74f','#ff6b6b'] });
+      if (Date.now() < end) requestAnimationFrame(frame);
+    })();
+  }
+
+  // Fade out countdown
+  const overlay = document.getElementById('midnight-countdown');
+  overlay.classList.add('fade-out');
+
+  setTimeout(() => {
+    overlay.classList.add('hidden');
+    // Show & init landing
+    const landing = document.getElementById('landing');
+    landing.style.display = '';
+    initParticles();
+    createBalloons();
+  }, 1000);
+}
+
+function initCountdownParticles() {
+  const canvas = document.getElementById('countdown-particles');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+  const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      r: Math.random() * 2 + .5,
+      dx: (Math.random() - .5) * .3,
+      dy: (Math.random() - .5) * .3,
+      o: Math.random() * .4 + .1,
+      color: ['#e8a4c8','#a78bfa','#f9c74f','#fff'][Math.floor(Math.random()*4)]
+    });
+  }
+
+  function animate() {
+    if (canvas.classList?.contains('hidden') || !document.body.contains(canvas)) return;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.o;
+      ctx.fill();
+      p.x += p.dx; p.y += p.dy;
+      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(animate);
+  }
+  animate();
+}
 
 /* ══════════════════════════════════════════════════════════════
    PARTICLES BACKGROUND (landing)

@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy 26th Birthday! 🎂✨</title>
+    <meta
+      name="description"
+      content="A magical birthday celebration — crafted with love."
+    />
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- GSAP for smooth animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- ════════════════════════════════════════════
+       SECTION 1 — ANIMATED LANDING SCREEN
+       ════════════════════════════════════════════ -->
+    <section id="landing" class="landing">
+      <!-- Floating particles canvas -->
+      <canvas id="particles-canvas"></canvas>
+
+      <!-- Floating balloons -->
+      <div class="balloons-container" id="balloons-container"></div>
+
+      <div class="landing-content">
+        <div class="age-badge">
+          <span class="age-number">26</span>
+        </div>
+        <h1 class="landing-title">
+          <span class="title-line title-line-1">Χρόνια πολλά</span>
+          <!-- ✏️ CUSTOMIZE: Change your sister's name below -->
+          <span class="title-line title-line-2 sister-name">Λινάκι μου!</span>
+        </h1>
+
+        <button
+          id="open-surprise-btn"
+          class="btn-magic"
+          onclick="openSurprise()"
+        >
+          <span class="btn-text">Open Your Surprise</span>
+          <span class="btn-sparkle">🎁</span>
+        </button>
+      </div>
+
+      <!-- Decorative floating elements -->
+      <div class="floating-elements">
+        <span class="float-item float-star">⭐</span>
+        <span class="float-item float-heart">💖</span>
+        <span class="float-item float-cake">🎂</span>
+        <span class="float-item float-gift">🎁</span>
+        <span class="float-item float-sparkle">✨</span>
+        <span class="float-item float-star2">🌟</span>
+        <span class="float-item float-heart2">💕</span>
+        <span class="float-item float-balloon">🎈</span>
+      </div>
+    </section>
+
+    <!-- ════════════════════════════════════════════
+       SECTION 2 — MAIN CONTENT (revealed after click)
+       ════════════════════════════════════════════ -->
+    <main id="main-content" class="main-content hidden">
+      <!-- Music toggle -->
+      <button
+        id="music-toggle"
+        class="music-toggle"
+        onclick="toggleMusic()"
+        title="Toggle Music"
+      >
+        <span class="music-icon">🎵</span>
+        <span class="music-label">Music</span>
+      </button>
+
+      <!-- Scroll-to-top -->
+      <button id="scroll-top" class="scroll-top-btn" onclick="scrollToTop()">
+        ↑
+      </button>
+
+      <!-- ──────────── BIRTHDAY MESSAGE ──────────── -->
+      <section id="message-section" class="section message-section">
+        <div class="section-inner">
+          <div class="sparkle-divider">✦ ✦ ✦</div>
+          <h2 class="section-title glow-text">To the Most Amazing Sister</h2>
+          <div class="message-card glass-card">
+            <!-- ✏️ CUSTOMIZE: Edit this birthday message -->
+            <p class="birthday-message">
+              Σημερα εχεις γενεθλια και θα ηθελα να σου πω ποσο πολυ σε αγαπαω
+              και ποσο περηφανος νιωθω για την αδερφη που εχω. Θελω ειλικρινα να
+              γινουν ολες σου οι ευχες πραγματικοτητα και να εισαι ευτυχισμενη
+              και παντα γελαστη.
+            </p>
+
+            <p class="message-signature">— Με ολη μου την αγαπη 💛</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────── PHOTO GALLERY ──────────── -->
+      <section id="gallery-section" class="section gallery-section">
+        <div class="section-inner">
+          <h2 class="section-title glow-text">Our Beautiful Memories 📸</h2>
+          <p class="section-subtitle">Each photo is a chapter in our story</p>
+          <div id="photo-gallery" class="photo-gallery"></div>
+        </div>
+      </section>
+
+      <!-- ──────────── MEMORY TIMELINE ──────────── -->
+      <section id="timeline-section" class="section timeline-section">
+        <div class="section-inner">
+          <h2 class="section-title glow-text">Memory Lane 💫</h2>
+          <p class="section-subtitle"></p>
+          <div id="timeline" class="timeline"></div>
+        </div>
+      </section>
+
+      <!-- ──────────── MAKE A WISH ──────────── -->
+      <section id="wish-section" class="section wish-section">
+        <div class="section-inner">
+          <h2 class="section-title glow-text">Make a Wish 🕯️</h2>
+          <p class="section-subtitle">
+            Close your eyes, take a breath, and blow…
+          </p>
+          <div class="cake-container" id="cake-container">
+            <div class="cake">
+              <div class="cake-layer cake-layer-3"></div>
+              <div class="cake-layer cake-layer-2"></div>
+              <div class="cake-layer cake-layer-1"></div>
+              <div class="candles-row" id="candles-row"></div>
+              <div class="cake-plate"></div>
+            </div>
+            <p class="wish-instruction" id="wish-instruction">
+              Tap the candles to blow them out! 🌬️
+            </p>
+            <div class="wish-result hidden" id="wish-result">
+              <span class="wish-emoji">🌠</span>
+              <p class="wish-text">May all your wishes come true!</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────── 3D BIRTHDAY CARD ──────────── -->
+      <section id="card-section" class="section card-section">
+        <div class="section-inner">
+          <h2 class="section-title glow-text">A Special Card for You 💌</h2>
+          <p class="section-subtitle">Click to open</p>
+          <div class="flip-card-container">
+            <div class="flip-card" id="flip-card" onclick="toggleCard()">
+              <div class="flip-card-inner" id="flip-card-inner">
+                <div class="flip-card-front glass-card">
+                  <div class="card-front-deco">🎀</div>
+                  <h3 class="card-front-title">For My Dearest Sister</h3>
+                  <p class="card-front-sub">tap to open ♡</p>
+                </div>
+                <div class="flip-card-back glass-card">
+                  <div class="card-back-content">
+                    <!-- ✏️ CUSTOMIZE: Edit the card message below -->
+                    <p class="card-message">
+                      Λινα,<br /><br />
+                      Σε αγαπαω παρα πολυ και σε ευχαριστω που εισαι διπλα μου
+                      σε ολα, δε θα μπορουσα να φανταστω. τον εαυτο μου χωρις να
+                      σε εχω αδελφη. <br /><br />
+                      Θα ειμαι για παντα διπλα σου και ειμαι περηφανος για εσενα
+                      για οτι εχεις καταφερει και που εχεις βρει τον εαυτο σου
+                      Σε θαυμαζω για αυτο που εισαι και μην αλλαξεις ποτε<br /><br />
+                      Χρονια πολλα λινουμπι 🌟
+                    </p>
+                    <p class="card-sign">Forever yours ❤️</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────── COUNTDOWN REVEAL ──────────── -->
+      <section id="countdown-section" class="section countdown-section">
+        <div class="section-inner">
+          <h2 class="section-title glow-text">One Last Thing…</h2>
+          <p class="section-subtitle">Are you ready?</p>
+          <button
+            class="btn-magic btn-countdown"
+            id="countdown-btn"
+            onclick="startCountdown()"
+          >
+            <span class="btn-text">Reveal Final Surprise</span>
+            <span class="btn-sparkle">🎆</span>
+          </button>
+          <div class="countdown-display hidden" id="countdown-display">
+            <span class="countdown-number" id="countdown-number">3</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ──────────── FINAL EMOTIONAL SECTION ──────────── -->
+      <section id="final-section" class="section final-section hidden">
+        <canvas id="final-confetti-canvas"></canvas>
+        <div class="section-inner final-inner">
+          <div class="final-hearts" id="final-hearts"></div>
+          <h2 class="final-title">
+            <!-- ✏️ CUSTOMIZE: Change the final message -->
+            <span class="final-line final-line-1">Για την καλυτερη αδελφη</span>
+            <span class="final-line final-line-2">Σε ολο τον πλανητη</span>
+          </h2>
+          <div class="final-message-box glass-card">
+            <p class="final-message">
+              Σε αγαπω πιο πολυ απο ολες τις λεξεις. Θελω να σου ευχηθω χρονια
+              πολλα και να κανεις πραγματικοτητα ολες τις ευχες σου!
+            </p>
+            <p class="final-love">Σαγαπω💖</p>
+          </div>
+          <div class="final-emojis">
+            <span>🎂</span><span>🎉</span><span>🥳</span><span>💖</span
+            ><span>🌟</span><span>🎁</span><span>🎈</span><span>✨</span>
+          </div>
+          <button class="btn-magic btn-replay" onclick="replayAll()">
+            <span class="btn-text">Replay the Magic ✨</span>
+          </button>
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="site-footer">
+        <p>Made with 💖 for the best sister ever</p>
+      </footer>
+    </main>
+
+    <!-- Lightbox -->
+    <div id="lightbox" class="lightbox hidden" onclick="closeLightbox(event)">
+      <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+      <button class="lightbox-prev" onclick="prevImage(event)">‹</button>
+      <button class="lightbox-next" onclick="nextImage(event)">›</button>
+      <div class="lightbox-content">
+        <img id="lightbox-img" src="" alt="Memory" />
+        <p class="lightbox-caption" id="lightbox-caption"></p>
+      </div>
+    </div>
+
+    <!-- Floating hearts container (click effect) -->
+    <div id="click-hearts-container"></div>
+
+    <!-- Audio (optional — place a birthday.mp3 in root if desired) -->
+    <!-- ✏️ CUSTOMIZE: Replace with your own music file -->
+    <audio id="bg-music" loop preload="none">
+      <source src="birthdaylina.mp3" type="audio/mpeg" />
+    </audio>
+
+    <script src="script.js"></script>
+  </body>
+</html>
